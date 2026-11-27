@@ -74,14 +74,6 @@ Welcome to your [38;2;23;147;209mCachyOS[0m!
 EOF
 }
 
-fetch_cachyos_mirrorlist() {
-    mkdir -p ${src_dir}/archiso/airootfs/etc/pacman.d
-    local _mirrorlist_url="https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/master/cachyos-mirrorlist/cachyos-mirrorlist"
-
-    curl -sSL "${_mirrorlist_url}" > ${src_dir}/archiso/airootfs/etc/pacman.d/cachyos-mirrorlist
-    sed 's|/$arch/|/$arch_v4/|g' ${src_dir}/archiso/airootfs/etc/pacman.d/cachyos-mirrorlist > ${src_dir}/archiso/airootfs/etc/pacman.d/cachyos-v4-mirrorlist
-}
-
 generate_environment() {
     local _profile="$1"
     if [ "$_profile" == "desktop" ]; then
@@ -102,26 +94,12 @@ generate_edition_tag() {
     echo "${_edition}" > ${src_dir}/archiso/airootfs/etc/edition-tag
 }
 
-modify_mkarchiso() {
-    local _is_hack_applied="$(grep -q 'archlinux-keyring-wkd-sync.timer' /usr/bin/mkarchiso; echo $?)"
-    if [ $_is_hack_applied -ne 0 ]; then
-        msg "Patching mkarchiso with disabled arch keyrings timer..."
-
-        sudo sed 's/_run_once _make_customize_airootfs/_run_once _make_customize_airootfs\n\trm -f "${pacstrap_dir}\/usr\/lib\/systemd\/system\/timers.target.wants\/archlinux-keyring-wkd-sync.timer"\n/' -i /usr/bin/mkarchiso
-    else
-        msg "mkarchiso is already patched!"
-    fi
-}
-
 prepare_profile(){
     profile=$1
 
     info "Profile: [%s]" "${profile}"
 
     local _iso_version="$(date +%y%m%d)"
-
-    # Fetch up-to-date version of CachyOS repo mirrorlist
-    fetch_cachyos_mirrorlist
 
     generate_motd
 
@@ -166,9 +144,6 @@ run_build() {
     cp -r archiso ${work_dir}/archiso
 
     msg "Start [Build ISO]"
-
-    # insert removal of archlinux keyrings timer on the ISO before pack
-    modify_mkarchiso
 
     [ -d "$outFolder/$_profile" ] || mkdir -p "$outFolder/$_profile"
     cd ${work_dir}/archiso/

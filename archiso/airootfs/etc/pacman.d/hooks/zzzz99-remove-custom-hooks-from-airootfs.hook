@@ -14,5 +14,6 @@ Description = Work around FS#49347 by removing custom pacman hooks that are only
 When = PostTransaction
 Depends = sh
 Depends = coreutils
+Depends = findutils
 Depends = grep
-Exec = /bin/sh -c "rm -- $(grep -Frl 'remove from airootfs' /etc/pacman.d/hooks/)"
+Exec = /bin/sh -c "grep -FrlZ 'remove from airootfs' /etc/pacman.d/hooks/ | xargs -0 -r rm -f --"

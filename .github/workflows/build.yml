@@ -5,6 +5,9 @@ on:
     - master
   pull_request:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
@@ -19,6 +22,16 @@ jobs:
     outputs:
       builddate: ${{ steps.date.outputs.builddate }}
     steps:
+      - name: Verify x86-64-v4 (AVX-512) CPU support
+        id: cpu-check
+        run: |
+          for flag in avx512f avx512bw avx512cd avx512dq avx512vl; do
+            if ! grep -qw "$flag" /proc/cpuinfo; then
+              echo "::error::Build host CPU lacks required x86-64-v4 flag '$flag'; cannot run znver4 chroot hooks."
+              exit 1
+            fi
+          done
+
       - name: Get build date
         id: date
         run: |
@@ -34,22 +47,22 @@ jobs:
         id: keyring
         run: |
           pacman-key --init
-          pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
-          pacman-key --lsign-key F3B607488DB35A47
+          pacman-key --recv-keys 882DCFE48E2051D48E2562ABF3B607488DB35A47 --keyserver keyserver.ubuntu.com
+          pacman-key --lsign-key 882DCFE48E2051D48E2562ABF3B607488DB35A47
 
           sed -i '/^\[core\]$/i[cachyos]\nServer = https://cdn77.cachyos.org/repo/$arch/$repo\nServer = https://mirror.cachyos.org/repo/$arch/$repo\n' /etc/pacman.conf
 
       - name: Install dependencies
         id: dependencies
         run: |
-          sudo pacman -Syu --noconfirm archiso cachyos-keyring mkinitcpio-archiso squashfs-tools grub
+          sudo pacman -Syu --noconfirm archiso cachyos-keyring mkinitcpio-archiso squashfs-tools
 
       - name: Create build user
         id: user-archiso
         run: |
           useradd builder -m
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-          chmod -R a+rw .
+          chown -R builder:builder .
 
       - name: Build ISO (${{ steps.date.outputs.builddate }})
         id: build

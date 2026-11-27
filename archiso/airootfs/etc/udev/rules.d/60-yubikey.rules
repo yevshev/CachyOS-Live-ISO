@@ -1,2 +1,0 @@
-# Grant active local user session access to YubiKey FIDO2/U2F HID devices
-KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1050", TAG+="uaccess"

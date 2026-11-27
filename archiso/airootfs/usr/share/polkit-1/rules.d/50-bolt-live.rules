@@ -1,0 +1,10 @@
+/* Allow active local wheel user to authorize/enroll Thunderbolt devices in live session */
+polkit.addRule(function(action, subject) {
+    if ((action.id === "org.freedesktop.bolt.authorize" ||
+         action.id === "org.freedesktop.bolt.enroll") &&
+        subject.isInGroup("wheel") &&
+        subject.local &&
+        subject.active) {
+        return polkit.Result.YES;
+    }
+});

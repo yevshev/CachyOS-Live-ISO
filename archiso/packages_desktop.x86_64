@@ -15,7 +15,6 @@ cachyos-keyring
 cachyos-mirrorlist
 cachyos-settings
 cachyos-v4-mirrorlist
-ccid
 cryptsetup
 diffutils
 dolphin
@@ -33,6 +32,7 @@ kxkb2locale1
 less
 libfido2
 linux-cachyos
+linux-firmware-amd
 linux-firmware-amdgpu
 linux-firmware-realtek
 mesa
@@ -45,7 +45,6 @@ ntfs-3g
 nvme-cli
 openssh
 parted
-pcsclite
 pipewire
 pipewire-alsa
 pipewire-jack
@@ -59,6 +58,7 @@ plasma-workspace
 polkit
 polkit-kde-agent
 power-profiles-daemon
+pv
 realtime-privileges
 rsync
 rtkit
