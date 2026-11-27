@@ -1,7 +1,9 @@
 alsa-utils
 amd-ucode
+archiso
 archlinux-keyring
 base
+base-devel
 bash-completion
 bolt
 brave-origin-bin
@@ -13,6 +15,7 @@ cachyos-hooks
 cachyos-kde-settings
 cachyos-keyring
 cachyos-mirrorlist
+cachyos-packageinstaller
 cachyos-settings
 cachyos-v4-mirrorlist
 cryptsetup
@@ -22,8 +25,11 @@ dosfstools
 e2fsprogs
 exfatprogs
 fish
+flatpak
+fuse2
 ghostty
-kate
+git
+isoimagewriter
 kcalc
 kde-gtk-config
 kinfocenter
@@ -44,7 +50,9 @@ noto-fonts
 ntfs-3g
 nvme-cli
 openssh
+pacman-contrib
 parted
+paru
 pipewire
 pipewire-alsa
 pipewire-jack
@@ -74,4 +82,6 @@ wireplumber
 xdg-user-dirs-gtk
 xdg-utils
 xfsprogs
+zed
+zlib-ng-compat
 zram-generator

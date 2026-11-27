@@ -1,0 +1,13 @@
+/* Allow active local wheel user to install/remove/upgrade packages via CachyOS Package Installer in live session */
+polkit.addRule(function(action, subject) {
+    if ((action.id === "org.cachyos.cachyos-pi.install" ||
+         action.id === "org.cachyos.cachyos-pi.remove" ||
+         action.id === "org.cachyos.cachyos-pi.upgrade" ||
+         action.id === "org.cachyos.cachyos-pi.rate-mirrors" ||
+         action.id === "org.cachyos.cachyos-pi.install-built") &&
+        subject.isInGroup("wheel") &&
+        subject.local &&
+        subject.active) {
+        return polkit.Result.YES;
+    }
+});
