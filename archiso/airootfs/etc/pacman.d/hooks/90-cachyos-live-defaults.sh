@@ -22,8 +22,12 @@ match = { pci-vendor = 0x1002 }\
 plane-color-pipelines = true\
 ' "$JAY_CFG"
 
-    # Comment out upstream placeholder [[outputs]] block (contains invalid empty `width = ,` syntax)
-    sed -i '/^\[\[outputs\]\]/,/^$/ s/^/# /' "$JAY_CFG"
+    # Replace upstream placeholder [[outputs]] block (invalid empty `width = ,`) with 2x HiDPI scaling
+    sed -i '/^\[\[outputs\]\]/,/^$/ c\
+[[outputs]]\
+match = {}\
+scale = 2.0\
+' "$JAY_CFG"
 
     # Disable XWayland (pure Wayland) and enable Wayland color-management protocol for HDR
     sed -i '/^\[color-management\]/ i\
