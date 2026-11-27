@@ -84,6 +84,7 @@ fetch_cachyos_mirrorlist() {
     local _mirrorlist_url="https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/master/cachyos-mirrorlist/cachyos-mirrorlist"
 
     curl -sSL "${_mirrorlist_url}" > ${src_dir}/archiso/airootfs/etc/pacman.d/cachyos-mirrorlist
+    sed 's|/$arch/|/$arch_v4/|g' ${src_dir}/archiso/airootfs/etc/pacman.d/cachyos-mirrorlist > ${src_dir}/archiso/airootfs/etc/pacman.d/cachyos-v4-mirrorlist
 }
 
 change_grub_version() {
