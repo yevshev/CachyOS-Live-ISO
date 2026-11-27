@@ -1,0 +1,10 @@
+[terminal]
+vt = 1
+
+[default_session]
+command = "agreety --cmd 'jay run'"
+user = "greeter"
+
+[initial_session]
+command = "jay run"
+user = "liveuser"

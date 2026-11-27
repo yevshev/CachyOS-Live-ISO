@@ -3,10 +3,11 @@
 Operation = Install
 Operation = Upgrade
 Type = Package
-Target = cachyos-kde-settings
+Target = cachyos-jay-noctalia
 
 [Action]
-Description = Setting Ghostty as default terminal in KDE...
+Description = Customizing Jay + Noctalia live ISO defaults...
 When = PostTransaction
-Depends = kconfig
-Exec = /bin/sh -c "kwriteconfig6 --file /etc/skel/.config/kdeglobals --group General --key TerminalApplication ghostty && kwriteconfig6 --file /etc/skel/.config/kdeglobals --group General --key TerminalService com.mitchellh.ghostty.desktop"
+Depends = bash
+Depends = sed
+Exec = /usr/bin/bash /etc/pacman.d/hooks/90-cachyos-live-defaults.sh

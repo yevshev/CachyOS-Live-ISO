@@ -1,8 +1,9 @@
-name: Desktop ISO
+name: Jay + Noctalia Desktop ISO
 on:
   push:
     branches:
     - master
+    - jay-noctalia
   pull_request:
 
 permissions:
@@ -73,5 +74,5 @@ jobs:
         id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: cachyos-desktop-linux-${{ steps.date.outputs.builddate }}
+          name: cachyos-jay-noctalia-linux-${{ steps.date.outputs.builddate }}
           path: out/desktop/*

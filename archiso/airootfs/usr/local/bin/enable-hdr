@@ -1,40 +1,36 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Wait briefly for KWin/KScreen outputs to settle (especially over Thunderbolt)
+# Wait briefly for Jay DRM outputs to settle (especially over Thunderbolt)
+json=""
 for _ in 1 2 3 4 5; do
-    raw="$(kscreen-doctor -o 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g' || true)"
-    if grep -q '^Output:' <<< "$raw"; then
+    json="$(jay --json randr show --formats 2>/dev/null || true)"
+    if [[ -n "$json" ]] && jq -e '[.drm_devices[]?.connectors[]? | select(.enabled == true and .output != null)] | length > 0' <<< "$json" >/dev/null 2>&1; then
         break
     fi
     sleep 1
 done
 
-[[ -n "${raw:-}" ]] || exit 0
+[[ -n "$json" ]] || exit 0
 
-mapfile -t args < <(awk '
-    /^Output:/ {
-        flush()
-        name = $3
-        enabled = 0
-        hdr_off = 0
-        wcg_off = 0
-        next
-    }
-    /^[[:space:]]+enabled$/ { enabled = 1; next }
-    /^[[:space:]]+HDR:[[:space:]]+disabled$/ { hdr_off = 1; next }
-    /^[[:space:]]+Wide Color Gamut:[[:space:]]+disabled$/ { wcg_off = 1; next }
-    END { flush() }
-    function flush() {
-        if (name != "" && enabled && hdr_off) {
-            print "output." name ".hdr.enable"
-            if (wcg_off) {
-                print "output." name ".wcg.enable"
-            }
-        }
-    }
-' <<< "$raw")
-
-if (( ${#args[@]} > 0 )); then
-    kscreen-doctor "${args[@]}"
-fi
+while IFS=$'\t' read -r name has_10bit; do
+    [[ -n "$name" ]] || continue
+    jay randr output "$name" colors set bt2020 pq || true
+    if [[ "$has_10bit" == "true" ]]; then
+        jay randr output "$name" format set xrgb2101010 || true
+    fi
+done < <(
+    jq -r '
+        .drm_devices[]?.connectors[]?
+        | select(.enabled == true and .output != null)
+        | select(
+            ((.output.supported_color_spaces // []) | index("bt2020") != null)
+            and ((.output.supported_eotfs // []) | index("pq") != null)
+          )
+        | [
+            .name,
+            (((.output.formats // []) | index("xrgb2101010") != null) | tostring)
+          ]
+        | @tsv
+    ' <<< "$json"
+)
