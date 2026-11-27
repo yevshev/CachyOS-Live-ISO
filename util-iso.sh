@@ -82,11 +82,6 @@ fetch_cachyos_mirrorlist() {
     sed 's|/$arch/|/$arch_v4/|g' ${src_dir}/archiso/airootfs/etc/pacman.d/cachyos-mirrorlist > ${src_dir}/archiso/airootfs/etc/pacman.d/cachyos-v4-mirrorlist
 }
 
-change_grub_version() {
-    local _version="$1"
-    sed -i "s/CACHYOS_VERSION=\".*\"/CACHYOS_VERSION=\"${_version}\"/" ${src_dir}/archiso/grub/grub.cfg
-}
-
 generate_environment() {
     local _profile="$1"
     if [ "$_profile" == "desktop" ]; then
@@ -124,7 +119,6 @@ prepare_profile(){
     info "Profile: [%s]" "${profile}"
 
     local _iso_version="$(date +%y%m%d)"
-    change_grub_version "${_iso_version}"
 
     # Fetch up-to-date version of CachyOS repo mirrorlist
     fetch_cachyos_mirrorlist

@@ -25,7 +25,7 @@ sudo pacman -Syy
 
 ### Install necessary packages:
 ```bash
-sudo pacman -S archiso mkinitcpio-archiso git squashfs-tools grub --needed
+sudo pacman -S archiso mkinitcpio-archiso git squashfs-tools --needed
 ```
 
 ### Clone:
