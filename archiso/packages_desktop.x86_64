@@ -1,7 +1,6 @@
 alsa-utils
 amd-ucode
 archlinux-keyring
-avahi
 base
 bash-completion
 bolt
@@ -14,7 +13,6 @@ cachyos-hooks
 cachyos-kde-settings
 cachyos-keyring
 cachyos-mirrorlist
-cachyos-rate-mirrors
 cachyos-settings
 cachyos-v4-mirrorlist
 ccid
@@ -24,12 +22,12 @@ dolphin
 dosfstools
 e2fsprogs
 exfatprogs
+fish
 ghostty
 kate
 kcalc
 kde-gtk-config
 kinfocenter
-konsole
 kscreen
 kxkb2locale1
 less
@@ -42,7 +40,6 @@ mkinitcpio-archiso
 nano
 networkmanager
 noto-fonts
-nss-mdns
 ntfs-3g
 nvme-cli
 openssh
@@ -77,3 +74,4 @@ wireplumber
 xdg-user-dirs-gtk
 xdg-utils
 xfsprogs
+zram-generator
