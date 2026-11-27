@@ -57,7 +57,7 @@ trap_exit() {
 
 generate_motd() {
     cat << 'EOF' > ${src_dir}/archiso/airootfs/etc/motd
-This ISO is based on ArchLinux ISO modified to provide Installation Environment for [38;2;23;147;209mCachyOS[0m.
+This ISO is based on ArchLinux ISO modified to provide Live Environment for [38;2;23;147;209mCachyOS[0m.
 https://cachyos.org
 
 CachyOS Archiso Sources:
@@ -65,11 +65,6 @@ https://github.com/cachyos/cachyos-live-iso
 
 ArchLinux ISO Source:
 https://gitlab.archlinux.org/archlinux/archiso
-
-Calamares is used as GUI installer:
-https://github.com/calamares/calamares
-
-Live environment will start now and let you install [38;2;23;147;209mCachyOS[0m to disk.
 
 Getting help at the forum: https://discuss.cachyos.org
 
@@ -95,9 +90,7 @@ change_grub_version() {
 generate_environment() {
     local _profile="$1"
     if [ "$_profile" == "desktop" ]; then
-        cat << 'EOF' > ${src_dir}/archiso/airootfs/etc/environment
-ZPOOL_VDEV_NAME_PATH=1
-EOF
+        : > ${src_dir}/archiso/airootfs/etc/environment
     fi
 }
 
