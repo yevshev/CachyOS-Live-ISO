@@ -1,0 +1,14 @@
+[Unit]
+Description=Remount RAM-backed root and tmpfs filesystems with noatime
+DefaultDependencies=no
+After=local-fs-pre.target tmp.mount
+Before=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mount -o remount,noatime /
+ExecStart=-/usr/bin/mount -o remount,noatime /run/archiso/cowspace
+ExecStart=-/usr/bin/mount -o remount,noatime /tmp
+
+[Install]
+WantedBy=local-fs.target
