@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Wait briefly for KWin/KScreen outputs to settle (especially over Thunderbolt)
+for _ in 1 2 3 4 5; do
+    raw="$(kscreen-doctor -o 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g' || true)"
+    if grep -q '^Output:' <<< "$raw"; then
+        break
+    fi
+    sleep 1
+done
+
+[[ -n "${raw:-}" ]] || exit 0
+
+mapfile -t args < <(awk '
+    /^Output:/ {
+        flush()
+        name = $3
+        enabled = 0
+        hdr_off = 0
+        wcg_off = 0
+        next
+    }
+    /^[[:space:]]+enabled$/ { enabled = 1; next }
+    /^[[:space:]]+HDR:[[:space:]]+disabled$/ { hdr_off = 1; next }
+    /^[[:space:]]+Wide Color Gamut:[[:space:]]+disabled$/ { wcg_off = 1; next }
+    END { flush() }
+    function flush() {
+        if (name != "" && enabled && hdr_off) {
+            print "output." name ".hdr.enable"
+            if (wcg_off) {
+                print "output." name ".wcg.enable"
+            }
+        }
+    }
+' <<< "$raw")
+
+if (( ${#args[@]} > 0 )); then
+    kscreen-doctor "${args[@]}"
+fi
